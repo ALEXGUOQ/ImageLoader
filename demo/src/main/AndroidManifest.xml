@@ -44,7 +44,7 @@
 
     <activity
       android:name=".activity.RemoteImageViewActivity"
-      android:label="@string/long_list" />
+      android:label="@string/remote_image_view" />
 
     <provider
       android:name=".provider.ImageLoaderDemoProvider"
