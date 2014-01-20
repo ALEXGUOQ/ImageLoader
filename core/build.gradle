@@ -1,4 +1,23 @@
-apply plugin: 'java'
+apply plugin: 'android-library'
+
+dependencies {
+    compile 'com.google.android:android:2.2.1'
+}
+
+android {
+    compileSdkVersion 8
+    buildToolsVersion '19.0.1'
+
+    defaultConfig {
+        minSdkVersion 8
+        targetSdkVersion 19
+        versionCode 161
+        versionName "1.6.1"
+    }
+}
+
+/* ********************************************************** */
+
 apply plugin: 'maven'
 apply plugin: 'signing'
 
@@ -6,17 +25,6 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    compile 'com.google.android:android:2.2.1'
-    testCompile 'junit:junit:4.10'
-    testCompile 'org.robolectric:robolectric:2.2'
-    testCompile 'commons-io:commons-io:2.4'
-    testCompile 'org.mockito:mockito-core:1.9.5'
-    testCompile 'org.powermock:powermock-module-junit4:1.5'
-    testCompile 'org.powermock:powermock-classloading-objenesis:1.5'
-    testCompile 'org.powermock:powermock-api-mockito:1.5'
-    testCompile 'junit-addons:junit-addons:1.4'
-}
 
 tasks.withType(Test) {
     testLogging {
@@ -25,6 +33,8 @@ tasks.withType(Test) {
     }
 }
 
+
+/*
 group = 'com.novoda'
 ext.packaging = 'jar'
 
@@ -130,3 +140,5 @@ uploadArchives {
         }
     }
 }
+
+*/

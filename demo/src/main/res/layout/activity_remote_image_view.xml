@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   android:orientation="vertical"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
-  <com.novoda.imageloader.core.view.RemoteImageView
+  <com.novoda.RemoteImageView
     android:layout_width="300dp"
     android:layout_height="300dp"
     android:layout_gravity="center_horizontal"
-    android:background="@android:color/white" />
+    android:background="@android:color/white"
+    app:url="www.hptaslfjsf.com" />
 
 </LinearLayout>
