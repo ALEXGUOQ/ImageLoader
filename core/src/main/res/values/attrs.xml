@@ -2,5 +2,7 @@
 <resources>
   <declare-styleable name="RemoteImageView">
     <attr name="url" format="string" />
+    <attr name="cached_width" format="integer" />
+    <attr name="cached_height" format="integer" />
   </declare-styleable>
 </resources>
