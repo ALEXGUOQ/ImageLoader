@@ -11,6 +11,8 @@
     android:layout_gravity="center_horizontal"
     android:background="@android:color/white"
     app:url="http://i.imgur.com/9e8YjL8.jpg"
-     />
+    app:scaleType="fitCenter"
+    app:src="@drawable/novoda"
+    app:adjustViewBounds="true" />
 
 </ScrollView>

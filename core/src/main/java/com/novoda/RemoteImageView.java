@@ -18,10 +18,16 @@ public class RemoteImageView extends FrameLayout {
     private static final int DEFAULT_TAG_DIMENSION = 1024;
 
     private ImageView imageView;
-    private String url;
-    private int tagWidth = DEFAULT_TAG_DIMENSION;
-    private int tagHeight = DEFAULT_TAG_DIMENSION;
     private ImageManager imageLoader;
+
+    private String url;
+    private int cachedWidth = DEFAULT_TAG_DIMENSION;
+    private int cachedHeight = DEFAULT_TAG_DIMENSION;
+    private int maxHeight = Integer.MAX_VALUE;
+    private int maxWidth = Integer.MAX_VALUE;
+    private int scaleType = ImageView.ScaleType.CENTER_INSIDE.ordinal();
+    private boolean adjustViewBounds;
+    private int src;
 
 
     public RemoteImageView(Context context) {
@@ -44,6 +50,24 @@ public class RemoteImageView extends FrameLayout {
         load();
     }
 
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public void load(){
+        if (TextUtils.isEmpty(url)) {
+            Log.w(getClass().getSimpleName(), "No url has been set on this view; cannot load image.");
+            return;
+        }
+
+        ImageTagFactory tagFactory = ImageTagFactory.newInstance();
+        tagFactory.setWidth(cachedWidth);
+        tagFactory.setHeight(cachedHeight);
+        imageView.setTag(tagFactory.build(url, getContext()));
+
+        imageLoader.getLoader().load(imageView);
+    }
+
     private void initRemoteView(Context context) {
         this.imageView = new ImageView(context);
         setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
@@ -62,34 +86,40 @@ public class RemoteImageView extends FrameLayout {
                     url = typedArray.getString(attr);
                     break;
                 case R.styleable.RemoteImageView_cached_width:
-                    tagWidth = typedArray.getInt(attr, DEFAULT_TAG_DIMENSION);
+                    cachedWidth = typedArray.getInt(attr, DEFAULT_TAG_DIMENSION);
                     break;
                 case R.styleable.RemoteImageView_cached_height:
-                    tagHeight = typedArray.getInt(attr, DEFAULT_TAG_DIMENSION);
+                    cachedHeight = typedArray.getInt(attr, DEFAULT_TAG_DIMENSION);
+                    break;
+                case R.styleable.RemoteImageView_adjustViewBounds:
+                    adjustViewBounds = typedArray.getBoolean(attr, false);
+                    break;
+                case R.styleable.RemoteImageView_maxHeight:
+                    maxHeight = typedArray.getInt(attr, Integer.MAX_VALUE);
+                    break;
+                case R.styleable.RemoteImageView_maxWidth:
+                    maxWidth = typedArray.getInt(attr, Integer.MAX_VALUE);
+                    break;
+                case R.styleable.RemoteImageView_scaleType:
+                    scaleType = typedArray.getInt(attr, ImageView.ScaleType.CENTER_INSIDE.ordinal());
+                    break;
+                case R.styleable.RemoteImageView_src:
+                    src = typedArray.getResourceId(attr, 0);
                     break;
                 default:
                     break;
             }
         }
         typedArray.recycle();
+        updateImageViewWithAttributes();
     }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public void load(){
-        if (TextUtils.isEmpty(url)) {
-            Log.w(getClass().getSimpleName(), "No url has been set on this view; cannot load image.");
-            return;
-        }
-
-        ImageTagFactory tagFactory = ImageTagFactory.newInstance();
-        tagFactory.setWidth(tagWidth);
-        tagFactory.setHeight(tagHeight);
-        imageView.setTag(tagFactory.build(url, getContext()));
-
-        imageLoader.getLoader().load(imageView);
+    private void updateImageViewWithAttributes() {
+        imageView.setMaxWidth(maxWidth);
+        imageView.setMaxHeight(maxHeight);
+        imageView.setScaleType(ImageView.ScaleType.values()[scaleType]);
+        imageView.setAdjustViewBounds(adjustViewBounds);
+        imageView.setBackgroundResource(src);
     }
 
 }
