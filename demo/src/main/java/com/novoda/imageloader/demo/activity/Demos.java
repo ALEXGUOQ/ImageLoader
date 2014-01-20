@@ -77,6 +77,9 @@ public class Demos extends Activity implements OnItemClickListener {
             case 9:
                 startActivity(DirectLoading.class, fadeIn, LIST_VIEW);
                 break;
+            case 10:
+                startActivity(RemoteImageViewActivity.class);
+                break;
             default:
                 break;
         }

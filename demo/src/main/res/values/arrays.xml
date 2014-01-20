@@ -12,5 +12,6 @@
     <item>@string/large_list_animated</item>
     <item>@string/direct_loader</item>
     <item>@string/direct_loader_animated</item>
+    <item>@string/remote_image_view</item>
   </string-array>
 </resources>

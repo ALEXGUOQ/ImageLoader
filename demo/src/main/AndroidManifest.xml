@@ -42,6 +42,10 @@
       android:name=".activity.DirectLoading"
       android:label="@string/direct_loader" />
 
+    <activity
+      android:name=".activity.RemoteImageViewActivity"
+      android:label="@string/long_list" />
+
     <provider
       android:name=".provider.ImageLoaderDemoProvider"
       android:authorities="com.novoda.imageloader.demo" />
