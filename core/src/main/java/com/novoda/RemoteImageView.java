@@ -18,9 +18,9 @@ public class RemoteImageView extends FrameLayout {
 
     private static final int DEFAULT_TAG_DIMENSION = 1024;
 
-    private ImageView imageView;
     private static ImageManager imageLoader;
 
+    private ImageView imageView;
     private String url;
     private boolean adjustViewBounds;
     private int cachedWidth = DEFAULT_TAG_DIMENSION;
@@ -29,7 +29,6 @@ public class RemoteImageView extends FrameLayout {
     private int maxWidth = Integer.MAX_VALUE;
     private int scaleType = ImageView.ScaleType.CENTER_INSIDE.ordinal();
     private int src;
-
 
     public RemoteImageView(Context context) {
         super(context);
