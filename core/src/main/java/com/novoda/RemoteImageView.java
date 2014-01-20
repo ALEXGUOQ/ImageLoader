@@ -21,10 +21,12 @@ public class RemoteImageView extends FrameLayout {
     private static ImageManager imageLoader;
 
     private ImageView imageView;
+    private ImageTagFactory tagFactory;
     private String url;
-    private boolean adjustViewBounds;
     private int cachedWidth = DEFAULT_TAG_DIMENSION;
     private int cachedHeight = DEFAULT_TAG_DIMENSION;
+
+    private boolean adjustViewBounds;
     private int maxHeight = Integer.MAX_VALUE;
     private int maxWidth = Integer.MAX_VALUE;
     private int scaleType = ImageView.ScaleType.CENTER_INSIDE.ordinal();
@@ -52,6 +54,7 @@ public class RemoteImageView extends FrameLayout {
 
     public void setUrl(String url) {
         this.url = url;
+        imageView.setTag(tagFactory.build(url, getContext()));
     }
 
     public void load(){
@@ -60,15 +63,15 @@ public class RemoteImageView extends FrameLayout {
             return;
         }
 
-        ImageTagFactory tagFactory = ImageTagFactory.newInstance();
-        tagFactory.setWidth(cachedWidth);
-        tagFactory.setHeight(cachedHeight);
         imageView.setTag(tagFactory.build(url, getContext()));
-
         getImageLoader().load(imageView);
     }
 
     private void initRemoteView(Context context) {
+        this.tagFactory = ImageTagFactory.newInstance();
+        tagFactory.setWidth(cachedWidth);
+        tagFactory.setHeight(cachedHeight);
+
         this.imageView = new ImageView(context);
         setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         addView(imageView, getLayoutParams());
