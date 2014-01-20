@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import com.novoda.imageloader.R;
 import com.novoda.imageloader.core.ImageManager;
 import com.novoda.imageloader.core.LoaderSettings;
+import com.novoda.imageloader.core.loader.Loader;
 import com.novoda.imageloader.core.model.ImageTagFactory;
 
 public class RemoteImageView extends FrameLayout {
@@ -18,15 +19,15 @@ public class RemoteImageView extends FrameLayout {
     private static final int DEFAULT_TAG_DIMENSION = 1024;
 
     private ImageView imageView;
-    private ImageManager imageLoader;
+    private static ImageManager imageLoader;
 
     private String url;
+    private boolean adjustViewBounds;
     private int cachedWidth = DEFAULT_TAG_DIMENSION;
     private int cachedHeight = DEFAULT_TAG_DIMENSION;
     private int maxHeight = Integer.MAX_VALUE;
     private int maxWidth = Integer.MAX_VALUE;
     private int scaleType = ImageView.ScaleType.CENTER_INSIDE.ordinal();
-    private boolean adjustViewBounds;
     private int src;
 
 
@@ -65,16 +66,13 @@ public class RemoteImageView extends FrameLayout {
         tagFactory.setHeight(cachedHeight);
         imageView.setTag(tagFactory.build(url, getContext()));
 
-        imageLoader.getLoader().load(imageView);
+        getImageLoader().load(imageView);
     }
 
     private void initRemoteView(Context context) {
         this.imageView = new ImageView(context);
         setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         addView(imageView, getLayoutParams());
-
-        LoaderSettings settings = new LoaderSettings.SettingsBuilder().build(getContext());
-        imageLoader = new ImageManager(settings);
     }
 
     private void initFromAttributes(Context context, AttributeSet attrs) {
@@ -120,6 +118,16 @@ public class RemoteImageView extends FrameLayout {
         imageView.setScaleType(ImageView.ScaleType.values()[scaleType]);
         imageView.setAdjustViewBounds(adjustViewBounds);
         imageView.setBackgroundResource(src);
+    }
+
+    private Loader getImageLoader() {
+        if (imageLoader != null) {
+            return imageLoader.getLoader();
+        }
+
+        LoaderSettings settings = new LoaderSettings.SettingsBuilder().build(getContext());
+        imageLoader = new ImageManager(settings);
+        return imageLoader.getLoader();
     }
 
 }
