@@ -2,7 +2,9 @@ package com.novoda;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -24,12 +26,6 @@ public class RemoteImageView extends FrameLayout {
     private int cachedWidth = DEFAULT_TAG_DIMENSION;
     private int cachedHeight = DEFAULT_TAG_DIMENSION;
 
-    private boolean adjustViewBounds;
-    private int maxHeight = Integer.MAX_VALUE;
-    private int maxWidth = Integer.MAX_VALUE;
-    private int scaleType = ImageView.ScaleType.CENTER_INSIDE.ordinal();
-    private int src;
-
     public RemoteImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initRemoteView(context, attrs);
@@ -50,13 +46,13 @@ public class RemoteImageView extends FrameLayout {
     }
 
     public void load() {
-//        if (TextUtils.isEmpty(url)) {
-//            Log.w(getClass().getSimpleName(), "No url has been set on this view; cannot load image.");
-//            return;
-//        }
-//
-//        imageView.setTag(tagFactory.build(url, getContext()));
-//        getImageLoader().load(imageView);
+        if (TextUtils.isEmpty(url)) {
+            Log.w(getClass().getSimpleName(), "No url has been set on this view; cannot load image.");
+            return;
+        }
+
+        imageView.setTag(tagFactory.build(url, getContext()));
+        getImageLoader().load(imageView);
     }
 
     private void initRemoteView(Context context, AttributeSet attrs) {
@@ -90,35 +86,11 @@ public class RemoteImageView extends FrameLayout {
                 case R.styleable.RemoteImageView_cached_height:
                     cachedHeight = typedArray.getInt(attr, DEFAULT_TAG_DIMENSION);
                     break;
-                case R.styleable.RemoteImageView_adjustViewBounds:
-                    adjustViewBounds = typedArray.getBoolean(attr, false);
-                    break;
-                case R.styleable.RemoteImageView_maxHeight:
-                    maxHeight = typedArray.getInt(attr, Integer.MAX_VALUE);
-                    break;
-                case R.styleable.RemoteImageView_maxWidth:
-                    maxWidth = typedArray.getInt(attr, Integer.MAX_VALUE);
-                    break;
-                case R.styleable.RemoteImageView_scaleType:
-                    scaleType = typedArray.getInt(attr, ImageView.ScaleType.CENTER_INSIDE.ordinal());
-                    break;
-                case R.styleable.RemoteImageView_src:
-                    src = typedArray.getResourceId(attr, 0);
-                    break;
                 default:
                     break;
             }
         }
         typedArray.recycle();
-        updateImageViewWithAttributes();
-    }
-
-    private void updateImageViewWithAttributes() {
-        imageView.setMaxWidth(maxWidth);
-        imageView.setMaxHeight(maxHeight);
-        imageView.setScaleType(ImageView.ScaleType.values()[scaleType]);
-        imageView.setAdjustViewBounds(adjustViewBounds);
-        imageView.setBackgroundResource(src);
     }
 
     private Loader getImageLoader() {
