@@ -60,17 +60,16 @@ public class RemoteImageView extends FrameLayout {
     }
 
     private void initRemoteView(Context context, AttributeSet attrs) {
+        this.imageView = new ImageView(context, attrs);
         this.tagFactory = ImageTagFactory.newInstance();
         tagFactory.setWidth(cachedWidth);
         tagFactory.setHeight(cachedHeight);
 
-        this.imageView = new ImageView(context, attrs);
-
-        setPadding(0,0,0,0);
-
         LayoutParams layoutParams = new LayoutParams(context, attrs);
-        layoutParams.setMargins(0, 0, 0, 0);
         setLayoutParams(layoutParams);
+
+        setPadding(0, 0, 0, 0);
+        layoutParams.setMargins(0, 0, 0, 0);
 
         addView(imageView, getLayoutParams());
     }
