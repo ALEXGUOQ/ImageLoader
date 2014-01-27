@@ -1,8 +1,5 @@
-repositories {
-    mavenCentral()
-}
-
 apply plugin: 'android-library'
+apply from: 'maven_push.gradle'
 
 dependencies {
     compile 'com.google.android:android:2.2.1'
@@ -20,4 +17,3 @@ android {
     }
 }
 
-apply from: 'maven-signing.gradle'

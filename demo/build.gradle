@@ -1,14 +1,7 @@
 apply plugin: 'android'
 
-repositories {
-    mavenCentral()
-    maven {
-        url "http://www.bugsense.com/gradle/"
-    }
-}
-
 dependencies {
-    compile project(":core")
+    compile project(":imageloader-core")
     compile "com.bugsense.trace:bugsense:3.5"
     instrumentTestCompile 'com.jayway.android.robotium:robotium-solo:3.6'
 }

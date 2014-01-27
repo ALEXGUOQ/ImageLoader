@@ -16,14 +16,25 @@ buildscript {
     }
 }
 
-allprojects {
-    version = '1.6.1'
+def isReleaseBuild() {
+    return hasProperty("release")
 }
 
-subprojects {
+def isCiBuild() {
+    return hasProperty("ci")
+}
+
+def isDevBuild() {
+    return !isReleaseBuild() && !isCiBuild()
+}
+
+allprojects {
+    version = '1.6.1'
     repositories {
         mavenCentral()
-        mavenLocal()
+        maven {
+            url "http://www.bugsense.com/gradle/"
+        }
         maven {
             url "https://oss.sonatype.org/content/repositories/snapshots"
         }

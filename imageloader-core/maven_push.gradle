@@ -1,78 +1,38 @@
 apply plugin: 'maven'
 apply plugin: 'signing'
 
-tasks.withType(Test) {
-    testLogging {
-        exceptionFormat "full"
-        events "passed", "skipped", "failed"
-    }
+version = "1.6.1-SNAPSHOT"
+
+def isReleaseBuild() {
+    !version.contains("SNAPSHOT")
 }
-
-group = 'com.novoda'
-ext.packaging = 'jar'
-
-def isDevBuild
-def isCiBuild
-def isReleaseBuild
 
 def sonatypeRepositoryUrl
 
-if (hasProperty("release")) {
-    isReleaseBuild = true
+if (isReleaseBuild()) {
+    println "RELEASE BUILD $version"
     sonatypeRepositoryUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-} else if (hasProperty("ci")) {
-    isCiBuild = true
-    version += "-SNAPSHOT"
-    sonatypeRepositoryUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
 } else {
-    isDevBuild = true
+    println "DEBUG BUILD $version"
+    sonatypeRepositoryUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from 'build/docs/javadoc'
-}
+def username = project.hasProperty("nexusUsername") ? project.property("nexusUsername") : ""
+def password = project.hasProperty("nexusPassword") ? project.property("nexusPassword") : ""
 
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allSource
-    classifier = 'sources'
-}
-
-artifacts {
-    archives jar
-    archives javadocJar
-    archives sourcesJar
-}
-
-if (isReleaseBuild) {
-    signing {
-        sign configurations.archives
-    }
-}
-
-uploadArchives {
-    repositories {
-        if (isDevBuild) {
-            mavenLocal()
-        } else {
+afterEvaluate { project ->
+    uploadArchives {
+        repositories {
             mavenDeployer {
-
-
-                if (isReleaseBuild) {
-                    beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-                }
+                beforeDeployment { deployment -> signing.signPom(deployment) }
 
                 repository(url: sonatypeRepositoryUrl) {
-                    authentication(userName: sonatypeUsername, password: sonatypePassword)
+                    authentication(userName: username, password: password)
                 }
 
                 pom.project {
-                    artifactId 'imageloader-core'
+                    name 'imageloader-core'
                     groupId 'com.novoda.imageloader'
-
-
-                    name 'ImageLoader'
-                    packaging 'jar'
                     description 'ImageLoader for Android'
                     url 'http://github.com/novoda/ImageLoader'
 
@@ -111,5 +71,32 @@ uploadArchives {
                 }
             }
         }
+    }
+
+    signing {
+        required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
+        sign configurations.archives
+    }
+
+    task androidJavadocs(type: Javadoc) {
+        source = android.sourceSets.main.allJava
+    }
+
+    task androidJavadocsJar(type: Jar) {
+        classifier = 'javadoc'
+        //basename = artifact_id
+        from androidJavadocs.destinationDir
+    }
+
+    task androidSourcesJar(type: Jar) {
+        classifier = 'sources'
+        //basename = artifact_id
+        from android.sourceSets.main.allSource
+    }
+
+    artifacts {
+        archives packageReleaseJar
+        archives androidSourcesJar
+        archives androidJavadocsJar
     }
 }

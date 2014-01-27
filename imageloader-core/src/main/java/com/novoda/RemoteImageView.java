@@ -2,9 +2,7 @@ package com.novoda;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -32,22 +30,16 @@ public class RemoteImageView extends FrameLayout {
     private int scaleType = ImageView.ScaleType.CENTER_INSIDE.ordinal();
     private int src;
 
-    public RemoteImageView(Context context) {
-        super(context);
-        initRemoteView(context);
-        load();
-    }
-
     public RemoteImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initRemoteView(context);
+        initRemoteView(context, attrs);
         initFromAttributes(context, attrs);
         load();
     }
 
     public RemoteImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        initRemoteView(context);
+        initRemoteView(context, attrs);
         initFromAttributes(context, attrs);
         load();
     }
@@ -57,22 +49,22 @@ public class RemoteImageView extends FrameLayout {
         imageView.setTag(tagFactory.build(url, getContext()));
     }
 
-    public void load(){
-        if (TextUtils.isEmpty(url)) {
-            Log.w(getClass().getSimpleName(), "No url has been set on this view; cannot load image.");
-            return;
-        }
-
-        imageView.setTag(tagFactory.build(url, getContext()));
-        getImageLoader().load(imageView);
+    public void load() {
+//        if (TextUtils.isEmpty(url)) {
+//            Log.w(getClass().getSimpleName(), "No url has been set on this view; cannot load image.");
+//            return;
+//        }
+//
+//        imageView.setTag(tagFactory.build(url, getContext()));
+//        getImageLoader().load(imageView);
     }
 
-    private void initRemoteView(Context context) {
+    private void initRemoteView(Context context, AttributeSet attrs) {
         this.tagFactory = ImageTagFactory.newInstance();
         tagFactory.setWidth(cachedWidth);
         tagFactory.setHeight(cachedHeight);
 
-        this.imageView = new ImageView(context);
+        this.imageView = new ImageView(context, attrs);
         setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         addView(imageView, getLayoutParams());
     }

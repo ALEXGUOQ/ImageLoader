@@ -1,1 +1,1 @@
-include ':core', ':demo', ':core-test'
+include ':demo', ':core-test', 'imageloader-core'
