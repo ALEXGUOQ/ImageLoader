@@ -65,9 +65,17 @@ public class RemoteImageView extends FrameLayout {
         tagFactory.setHeight(cachedHeight);
 
         this.imageView = new ImageView(context, attrs);
-        setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
+        setPadding(0,0,0,0);
+
+        LayoutParams layoutParams = new LayoutParams(context, attrs);
+        layoutParams.setMargins(0, 0, 0, 0);
+        setLayoutParams(layoutParams);
+
         addView(imageView, getLayoutParams());
     }
+
+
 
     private void initFromAttributes(Context context, AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.RemoteImageView);
